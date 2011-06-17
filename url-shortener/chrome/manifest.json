@@ -1,0 +1,13 @@
+{
+"update_url":"http://clients2.google.com/service/update2/crx",
+    "name": "uppy.co URL Shortener",
+    "version": "1.1",
+    "description": "Shows an icon to place a shortened URL in your clipboard if a URL is too long",
+    "page_action": {
+        "default_icon": "link_break.png",
+        "default_title": "Shorten this URL with uppy.co"
+    },
+    "icons": {"48": "icon.png"},
+    "background_page": "background.html",
+    "permissions": ["http://uppy.co/", "tabs", "notifications"]
+}

@@ -1,0 +1,65 @@
+<html>
+<body>
+<script type='text/javascript'>
+/* Written/updated June 2010 - Brian Ewing */
+
+function shorten_url(url) {
+    var XHR = new XMLHttpRequest();
+    var api_url = "http://uppy.co/api/url/shorten";
+    var params = "url=" + encodeURIComponent(url);
+
+    XHR.open("POST", api_url, true);
+
+    XHR.onreadystatechange = function() {
+        if(XHR.readyState == 4) {
+            var response = JSON.parse(XHR.responseText);
+
+            if(!response.error && clipboard("http://uppy.co/u/" + response.code)) {
+                show_notification("URL Shortened", "The shortened URL is now in your clipboard");
+            }
+        }
+    }
+
+    XHR.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    XHR.setRequestHeader("Content-length", params.length);
+
+    XHR.send(params);
+}
+
+function clipboard(text) {
+    var helper = document.getElementById("clipboardHelper");
+    if(helper) {
+        helper.value = text;
+        helper.select();
+        document.execCommand("copy", false, null);
+        return true;
+    }
+    return false;
+}
+
+function show_notification(title, text) {
+    var notification = webkitNotifications.createNotification(
+        'internet.png',
+        title,
+        text
+    );
+    notification.show();
+}
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+    if(changeInfo.url != undefined) {
+        if(changeInfo.url.match("^https?://") && changeInfo.url.length > 30) {
+            chrome.pageAction.show(tabId);
+        } else {
+            chrome.pageAction.hide(tabId);
+        }
+    }
+});
+
+chrome.pageAction.onClicked.addListener(function(tab) {
+    shorten_url(tab.url);
+});
+</script>
+<input id="clipboardHelper" value="">
+</body>
+</html>
