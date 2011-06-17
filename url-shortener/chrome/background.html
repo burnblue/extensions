@@ -36,13 +36,20 @@ function clipboard(text) {
     return false;
 }
 
-function show_notification(title, text) {
+function show_notification(title, text, timeout) {
     var notification = webkitNotifications.createNotification(
         'internet.png',
         title,
         text
     );
     notification.show();
+
+    if(timeout == null)
+        timeout = 5;
+
+    setTimeout(function() {
+        notification.cancel()
+    }, timeout*1000);
 }
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
