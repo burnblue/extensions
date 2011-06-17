@@ -21,7 +21,6 @@ function shorten_url(url) {
     }
 
     XHR.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    XHR.setRequestHeader("Content-length", params.length);
 
     XHR.send(params);
 }
